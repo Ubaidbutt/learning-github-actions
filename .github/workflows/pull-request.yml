@@ -1,0 +1,12 @@
+name: Pull Request
+
+on:
+  pull_request:
+    types:
+      - opened
+
+jobs:
+  hello-world:
+    name: hello-world job
+    runs-on: ubuntu:latest
+    run: echo "I am learning GitHub actions"
