@@ -1,7 +1,11 @@
-const fastify = require('fastify')({ logger: true });
-const users = require('./data/users.json');
+import { fastify } from 'fastify';
+import type { FastifyReply, FastifyRequest } from 'fastify';
 
-fastify.route({
+import users from './data/users.json';
+
+const server = fastify({ logger: true });
+
+server.route({
     method: 'GET',
     url: '/users',
     schema: {
@@ -9,8 +13,9 @@ fastify.route({
             username: { type: 'string' }
         }
     },
-    handler: function (request, reply) {
-        const username = request.query.username;
+    handler: function (request: FastifyRequest, reply: FastifyReply) {
+        const query = request.query as { username: string };
+        const { username } = query;
         if (!username) {
             return reply.send({ users: [] });
         }
@@ -23,9 +28,9 @@ fastify.route({
 // Run the server!
 const start = async () => {
     try {
-        await fastify.listen({ port: 3000 })
-    } catch (err) {
-        fastify.log.error(err)
+        await server.listen({ port: 3000 })
+    } catch (err: unknown) {
+        server.log.error(err)
         process.exit(1)
     }
 }
